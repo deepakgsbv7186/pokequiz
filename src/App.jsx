@@ -1,17 +1,14 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, SafeAreaView} from 'react-native';
 import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import RouteNavigation from './navigations/RouteNavigation';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Poke Quiz</Text>
-    </View>
+    <SafeAreaView style={{flex: 1}}>
+      <NavigationContainer>
+        <RouteNavigation />
+      </NavigationContainer>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'skyblue',
-  },
-});
