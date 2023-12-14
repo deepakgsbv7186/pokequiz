@@ -3,40 +3,49 @@ import React from 'react';
 import Octicons from 'react-native-vector-icons/Octicons';
 import {COLORS} from '../utils/theme';
 
-export default function FilterRow({productCount = 0}) {
+export default function FilterRow({
+  productCount = 0,
+  sortDesc = false,
+  setSortDesc,
+}) {
   return (
     <View style={styles.container}>
-      <View style={{...styles.headerContainer, flex: 0.7}}>
-        <Text style={{color: COLORS.lightgrey, fontSize: 12}}>
-          {productCount}/{productCount}
+      <View style={{...styles.headerContainer, flex: 0.6}}>
+        <Text style={styles.text}>
+          {productCount}/{productCount} Products
         </Text>
-        <Text style={{color: COLORS.lightgrey, fontSize: 12}}>Products</Text>
       </View>
       <View
         style={{
           ...styles.headerContainer,
-          flex: 0.3,
+          flex: 0.4,
           justifyContent: 'space-between',
         }}>
-        <View
-          style={{flexDirection: 'row', alignItems: 'center', columnGap: 6}}>
+        <View style={styles.iconTextContainer}>
           <Octicons
-            name="sort-asc"
+            name={sortDesc ? 'sort-desc' : 'sort-asc'}
             size={14}
             color={COLORS.grey}
-            onPress={() => console.log('Sort clicked')}
+            onPress={() => setSortDesc(prev => !prev)}
+            accessible={true}
+            accessibilityLabel={`Toggle Sorting (${
+              sortDesc ? 'High to Low' : 'Low to High'
+            })`}
           />
-          <Text style={{color: COLORS.grey, fontSize: 12}}>Sort</Text>
+          <Text style={styles.text}>
+            {sortDesc ? 'High to Low' : 'Low to High'}
+          </Text>
         </View>
-        <View
-          style={{flexDirection: 'row', alignItems: 'center', columnGap: 6}}>
+        <View style={styles.iconTextContainer}>
           <Octicons
             name="arrow-switch"
             size={14}
             color={COLORS.grey}
             onPress={() => console.log('Filter clicked')}
+            accessible={true}
+            accessibilityLabel="Filter"
           />
-          <Text style={{color: COLORS.grey, fontSize: 12}}>Filter</Text>
+          <Text style={styles.text}>Filter</Text>
         </View>
       </View>
     </View>
@@ -56,5 +65,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     columnGap: 10,
+  },
+  iconTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 6,
+  },
+  text: {
+    color: COLORS.grey,
+    fontSize: 12,
   },
 });
