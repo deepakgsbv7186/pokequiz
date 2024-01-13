@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {COLOR} from '../../theme/colors';
 import {moderateScale, moderateScaleVertical} from '../../theme/responsive';
 import {FONT} from '../../assets/fonts';
@@ -15,8 +15,10 @@ import Header from '../../components/Header';
 import EarnPoints from './EarnPoints';
 import ImageDisplay from './ImageDisplay';
 import OptionsDisplay from './OptionsDisplay';
+import BlurTestModal from '../../components/BlurTestModal';
 
 export default function PokemonQuiz() {
+  const [isVisible, setIsVisible] = useState(false);
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -31,9 +33,14 @@ export default function PokemonQuiz() {
         <OptionsDisplay />
       </ScrollView>
       <Buttons
+        onPress={() => setIsVisible(true)}
         title={'Skip'}
         bgColor={COLOR.blackOpacity40}
         btnContainerStyle={styles.skipbtn}
+      />
+      <BlurTestModal
+        isVisible={isVisible}
+        onClose={() => setIsVisible(false)}
       />
     </View>
   );
