@@ -9,8 +9,22 @@ const initialState = {
 const pokemonSlice = createSlice({
   name: 'pokemon',
   initialState,
-  reducers: {},
+  reducers: {
+    setPokemon: (state, action) => {
+      state.currentPokemon = action.payload;
+    },
+    setOptions: (state, action) => {
+      state.options = action.payload;
+    },
+    increasePoints: (state, action) => {
+      state.points += action.payload;
+    },
+    decreasePoints: (state, action) => {
+      state.points -= action.payload;
+    },
+  },
 });
 
-export const {} = pokemonSlice.actions;
+export const {setPokemon, setOptions, increasePoints, decreasePoints} =
+  pokemonSlice.actions;
 export default pokemonSlice.reducer;
