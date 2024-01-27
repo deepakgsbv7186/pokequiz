@@ -1,6 +1,5 @@
 import {
   ActivityIndicator,
-  Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -8,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {COLOR} from '../../theme/colors';
 import {moderateScale, moderateScaleVertical} from '../../theme/responsive';
 import {FONT} from '../../assets/fonts';
@@ -16,42 +16,70 @@ import Header from '../../components/Header';
 import EarnPoints from './EarnPoints';
 import ImageDisplay from './ImageDisplay';
 import OptionsDisplay from './OptionsDisplay';
-import {fetchPokemon} from '../../api';
+import {fetchRandomPokemon} from '../../api';
+import {
+  decreasePoints,
+  setOptions,
+  setPokemon,
+} from '../../redux/pokemon/pokemonSlice';
 
 export default function PokemonQuiz() {
-  const [loading, setLoading] = useState(true);
-  const [displayPokemon, setDisplayPokemon] = useState(null);
-  const getRandomPokeName = async () => {
-    const response = await fetchPokemon();
-    setDisplayPokemon({
-      name: response?.name,
-      imgURL: response?.sprites?.other?.['official-artwork']?.front_default,
-    });
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const {points} = useSelector(state => state.pokemon);
+  const loadNextQuestion = async () => {
+    const response = await fetchRandomPokemon();
+    const correctOption = response?.name;
+    const incorrectOptions = Array.from(
+      {length: 3},
+      async () => (await fetchRandomPokemon())?.name,
+    );
+    const options = await Promise.all([correctOption, ...incorrectOptions]);
+    dispatch(
+      setPokemon({
+        name: response?.name,
+        imgURL: response?.sprites?.other?.['official-artwork']?.front_default,
+      }),
+    );
+    dispatch(setOptions(options?.sort(() => Math.random() - 0.5)));
     setLoading(false);
   };
+
   useEffect(() => {
-    getRandomPokeName();
-  }, []);
-  console.log(displayPokemon);
+    setLoading(true);
+    const timer = setTimeout(() => {
+      loadNextQuestion();
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [points]);
+
   return (
     <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={{flex: 1}}
+        showsVerticalScrollIndicator={false}>
         <Header
           title={'Pokemon Quiz'}
           bgColor={COLOR.bulelabeltext}
           headerContainerStyle={{marginTop: moderateScaleVertical(20)}}
         />
-        <EarnPoints points={100} />
+        <EarnPoints points={points} />
 
         {loading ? (
-          <ActivityIndicator size={'small'} color={COLOR.white} />
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size={'large'} color={COLOR.white} />
+          </View>
         ) : (
-          <ImageDisplay img={displayPokemon?.imgURL} />
+          <>
+            <ImageDisplay />
+            <Text style={styles.taptochoose}>Tap to choose</Text>
+            <OptionsDisplay />
+          </>
         )}
-        <Text style={styles.taptochoose}>Tap to choose</Text>
-        <OptionsDisplay />
       </ScrollView>
       <Buttons
+        onPress={() => dispatch(decreasePoints(5))}
         title={'Skip'}
         bgColor={COLOR.blackOpacity40}
         btnContainerStyle={styles.skipbtn}
@@ -68,6 +96,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(10),
     position: 'relative',
   },
+  loadingContainer: {flex: 1, justifyContent: 'center', alignItems: 'center'},
   taptochoose: {
     textAlign: 'center',
     fontFamily: FONT.Poppins400,
