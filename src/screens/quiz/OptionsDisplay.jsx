@@ -1,9 +1,10 @@
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import HapticFeedback from 'react-native-haptic-feedback';
 import {moderateScale, moderateScaleVertical} from '../../theme/responsive';
 import Buttons from '../../components/Buttons';
 import {COLOR} from '../../theme/colors';
-import {useDispatch, useSelector} from 'react-redux';
 import {decreasePoints, increasePoints} from '../../redux/pokemon/pokemonSlice';
 
 export default function OptionsDisplay() {
@@ -12,8 +13,10 @@ export default function OptionsDisplay() {
   const handleChoose = choosed => {
     if (choosed.toLowerCase() === currentPokemon?.name.toLowerCase()) {
       dispatch(increasePoints(10));
+      HapticFeedback.trigger('impactLight');
     } else {
       dispatch(decreasePoints(10));
+      HapticFeedback.trigger('notificationError');
     }
   };
   return (

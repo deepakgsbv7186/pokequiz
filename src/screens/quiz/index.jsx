@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import HapticFeedback from 'react-native-haptic-feedback';
 import {COLOR} from '../../theme/colors';
 import {moderateScale, moderateScaleVertical} from '../../theme/responsive';
 import {FONT} from '../../assets/fonts';
@@ -81,12 +82,16 @@ export default function PokemonQuiz() {
       </ScrollView>
       <View style={styles.bottomBtnContainer}>
         <Buttons
-          onPress={() => dispatch(decreasePoints(5))}
+          onPress={() => {
+            dispatch(decreasePoints(5)), HapticFeedback.trigger('rigid');
+          }}
           title={'Skip'}
           bgColor={COLOR.yellow}
         />
         <Buttons
-          onLongPress={() => dispatch(resetPoints())}
+          onLongPress={() => {
+            dispatch(resetPoints()), HapticFeedback.trigger('impactHeavy');
+          }}
           title={'Long Press to Reset'}
           bgColor={COLOR.blackOpacity60}
         />
@@ -99,7 +104,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
-    backgroundColor: COLOR.black,
+    backgroundColor: COLOR.blackOpacity70,
     paddingHorizontal: moderateScale(10),
     position: 'relative',
   },
