@@ -22,9 +22,17 @@ const pokemonSlice = createSlice({
     decreasePoints: (state, action) => {
       state.points -= action.payload;
     },
+    resetPoints: state => {
+      state.points = 0;
+    },
   },
 });
 
-export const {setPokemon, setOptions, increasePoints, decreasePoints} =
-  pokemonSlice.actions;
+export const {
+  setPokemon,
+  setOptions,
+  increasePoints,
+  decreasePoints,
+  resetPoints,
+} = pokemonSlice.actions;
 export default pokemonSlice.reducer;

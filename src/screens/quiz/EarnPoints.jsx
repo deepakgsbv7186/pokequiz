@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 import React from 'react';
 import {COLOR} from '../../theme/colors';
 import {
@@ -12,8 +12,13 @@ export default function EarnPoints({points}) {
   return (
     <View
       style={{
-        backgroundColor: COLOR.blackOpacity10,
-        marginVertical: moderateScaleVertical(20),
+        backgroundColor:
+          points === 0
+            ? COLOR.blackOpacity60
+            : points < 0
+            ? COLOR.red
+            : COLOR.green,
+        marginVertical: moderateScaleVertical(16),
         padding: moderateScale(10),
         borderRadius: moderateScale(8),
       }}>
@@ -24,10 +29,8 @@ export default function EarnPoints({points}) {
           color: COLOR.white,
           textAlign: 'center',
         }}>
-        Points earned: {points}
+        {points === 0 ? 'Play to earn points' : `${points} points`}
       </Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({});

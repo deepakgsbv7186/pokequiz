@@ -19,6 +19,7 @@ import OptionsDisplay from './OptionsDisplay';
 import {fetchRandomPokemon} from '../../api';
 import {
   decreasePoints,
+  resetPoints,
   setOptions,
   setPokemon,
 } from '../../redux/pokemon/pokemonSlice';
@@ -78,12 +79,18 @@ export default function PokemonQuiz() {
           </>
         )}
       </ScrollView>
-      <Buttons
-        onPress={() => dispatch(decreasePoints(5))}
-        title={'Skip'}
-        bgColor={COLOR.blackOpacity40}
-        btnContainerStyle={styles.skipbtn}
-      />
+      <View style={styles.bottomBtnContainer}>
+        <Buttons
+          onPress={() => dispatch(decreasePoints(5))}
+          title={'Skip'}
+          bgColor={COLOR.yellow}
+        />
+        <Buttons
+          onLongPress={() => dispatch(resetPoints())}
+          title={'Long Press to Reset'}
+          bgColor={COLOR.blackOpacity60}
+        />
+      </View>
     </View>
   );
 }
@@ -92,7 +99,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
-    backgroundColor: COLOR.grayshade,
+    backgroundColor: COLOR.black,
     paddingHorizontal: moderateScale(10),
     position: 'relative',
   },
@@ -103,10 +110,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginVertical: moderateScaleVertical(20),
   },
-  skipbtn: {
+  bottomBtnContainer: {
     position: 'absolute',
-    bottom: moderateScaleVertical(20),
+    bottom: moderateScaleVertical(16),
     left: moderateScale(10),
     right: moderateScale(10),
+    rowGap: moderateScaleVertical(16),
   },
 });
